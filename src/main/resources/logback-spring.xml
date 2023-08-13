@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <springProperty name="APP_NAME" source="spring.application.name"/>
+    <springProperty name="GELF_SERVER" source="logging.gelf.server"/>
+    <springProperty name="GELF_PORT" source="logging.gelf.port"/>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <appender name="GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+        <graylogHost>${GELF_SERVER}</graylogHost>
+        <graylogPort>${GELF_PORT}</graylogPort>
+        <encoder class="de.siegmar.logbackgelf.GelfEncoder">
+            <staticField>application:${APP_NAME}</staticField>
+            <staticField>hostname:${HOSTNAME}</staticField>
+            <includeCallerData>true</includeCallerData>
+            <includeRootCauseData>true</includeRootCauseData>
+            <includeLevelName>true</includeLevelName>
+        </encoder>
+    </appender>
+
+    <logger name="dev.canm.scg" level="trace" additivity="true">
+        <appender-ref ref="GELF"/>
+    </logger>
+
+    <logger name="org.springframework.ws.client.MessageTracing" level="trace" additivity="false">
+        <appender-ref ref="GELF"/>
+    </logger>
+
+    <root level="INFO">
+        <level value="ALL" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="GELF" />
+    </root>
+
+</configuration>

@@ -1,0 +1,56 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: scg
+  cloud:
+    gateway:
+      routes:
+        - id: route_google
+          uri: https://www.google.com
+          predicates:
+            - Path=/google/**
+          filters:
+            - RewritePath=/google/(?<segment>.*), /$\{segment}
+        - id: route_spring-k8s_io_root
+          uri: http://localhost:8080
+          predicates:
+            - Path=/spring-k8s
+          filters:
+            - RewritePath=/spring-k8s, /
+        - id: route_pinsoft_io_root
+          uri: https://www.pinsoft.io
+          predicates:
+            - Path=/pinsoft
+          filters:
+            - RewritePath=/pinsoft, /
+        - id: route_pinsoft_io_paths
+          uri: https://www.pinsoft.io
+          predicates:
+            - Path=/pinsoft/**
+          filters:
+            - RewritePath=/pinsoft/(?<segment>.*), /$\{segment}
+
+logging:
+  gelf:
+    server: 192.168.68.113
+    port: 12201
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway.filter.headers.observation: INFO
+    reactor.netty: INFO
+    org.springframework.web.reactive: INFO
+
+management:
+  tracing:
+    enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    gateway:
+      enabled: true
