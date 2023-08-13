@@ -18,11 +18,11 @@
         </encoder>
     </appender>
 
-    <logger name="dev.canm.scg" level="trace" additivity="true">
+    <logger name="dev.canm.scg" level="debug" additivity="true">
         <appender-ref ref="GELF"/>
     </logger>
 
-    <logger name="org.springframework.ws.client.MessageTracing" level="trace" additivity="false">
+    <logger name="org.springframework.ws.client.MessageTracing" level="debug" additivity="false">
         <appender-ref ref="GELF"/>
     </logger>
 
