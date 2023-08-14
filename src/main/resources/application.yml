@@ -33,7 +33,7 @@ spring:
 
 logging:
   gelf:
-    server: 192.168.68.113
+    server: graylog-service
     port: 12201
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
